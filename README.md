@@ -1,1 +1,1127 @@
-# Eco_ruta
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#071b2c" />
+  <meta name="description" content="ECO-RUTA: recicla, suma eco-puntos y transforma el reciclaje en transporte sostenible. Proyecto ODS 9." />
+  <title>ECO-RUTA | Recicla y muévete</title>
+
+  <!-- TailwindCSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+    :root {
+      --green: #22c987;
+      --blue: #3787ff;
+      --ink: #102538;
+      --muted: #728396;
+      --bg: #f4f7fb;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    h1, h2, h3, .brand {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .55; }
+
+    .app-shell {
+      min-height: 100vh;
+      background:
+        radial-gradient(ellipse at 95% 0%, rgba(55,135,255,.07), transparent 30%),
+        var(--bg);
+    }
+
+    .sidebar {
+      background: #071b2c;
+      color: white;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #a9bdcc;
+      text-align: left;
+      transition: .2s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: white;
+      background: rgba(34,201,135,.14);
+    }
+
+    .nav-item.active {
+      box-shadow: inset 3px 0 var(--green);
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e8edf3;
+      border-radius: 20px;
+      box-shadow: 0 5px 22px rgba(19,43,69,.035);
+    }
+
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 26px rgba(19,43,69,.08);
+    }
+
+    .primary-btn {
+      color: #06251b;
+      background: linear-gradient(110deg, #36e29f, #21c987);
+      transition: .2s;
+      box-shadow: 0 8px 20px rgba(34,201,135,.19);
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(34,201,135,.3);
+    }
+
+    .blue-btn {
+      color: white;
+      background: linear-gradient(110deg, #438fff, #2369ee);
+    }
+
+    .dark-hero {
+      background:
+        radial-gradient(ellipse at 78% 0%, rgba(56,137,255,.26), transparent 42%),
+        radial-gradient(ellipse at 100% 100%, rgba(34,201,135,.17), transparent 45%),
+        #071b2c;
+    }
+
+    .chart-bar {
+      border-radius: 7px 7px 2px 2px;
+      min-height: 6px;
+      transition: height .45s ease;
+    }
+
+    .qr-frame {
+      width: 180px;
+      height: 180px;
+      margin: auto;
+      border: 3px solid #23c987;
+      border-radius: 22px;
+      position: relative;
+      display: grid;
+      place-items: center;
+      background:
+        linear-gradient(90deg, #e7f9f1 1px, transparent 1px),
+        linear-gradient(#e7f9f1 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+
+    .scan-line {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      height: 3px;
+      background: #20c987;
+      box-shadow: 0 0 15px #20c987;
+      animation: scan 1.7s ease-in-out infinite alternate;
+    }
+
+    @keyframes scan {
+      from { top: 12px; }
+      to { top: 158px; }
+    }
+
+    @keyframes pop {
+      0% { transform: scale(.75); opacity: 0; }
+      65% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1); }
+    }
+
+    .pop { animation: pop .4s ease-out; }
+
+    .modal-backdrop {
+      background: rgba(3,17,29,.65);
+      backdrop-filter: blur(5px);
+    }
+
+    .course-row {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .rank-bar {
+      height: 7px;
+      border-radius: 20px;
+      background: #edf1f6;
+      overflow: hidden;
+    }
+
+    .rank-bar > div {
+      height: 100%;
+      border-radius: inherit;
+      transition: width .5s;
+    }
+
+    .login-bg {
+      background:
+        radial-gradient(ellipse at 10% 10%, rgba(34,201,135,.18), transparent 40%),
+        radial-gradient(ellipse at 90% 90%, rgba(55,135,255,.24), transparent 45%),
+        #071b2c;
+    }
+
+    .login-grid {
+      background-image: radial-gradient(rgba(255,255,255,.12) 1px, transparent 1px);
+      background-size: 26px 26px;
+    }
+
+    @media (max-width: 640px) {
+      .mobile-nav {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 30;
+        background: #071b2c;
+        padding: 8px 5px calc(8px + env(safe-area-inset-bottom));
+        justify-content: space-around;
+      }
+
+      .mobile-nav button {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+        color: #9bb2c5;
+        font-size: 10px;
+        padding: 7px 9px;
+      }
+
+      .mobile-nav button.active { color: #36e29f; }
+
+      .mobile-nav span:first-child { font-size: 19px; }
+      .main-content { padding-bottom: 105px !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const INITIAL_DATA = {
+      name: "Estudiante",
+      course: "10A",
+      points: 350,
+      kilos: 3.5,
+      monthly: [
+        { month: "May", kilos: 1.0 },
+        { month: "Jun", kilos: 1.5 },
+        { month: "Jul", kilos: 2.0 },
+        { month: "Ago", kilos: 1.0 },
+        { month: "Sep", kilos: 2.5 },
+        { month: "Oct", kilos: 3.5 }
+      ],
+      scans: 0,
+      reservations: [],
+      history: []
+    };
+
+    const INITIAL_COURSES = [
+      { name: "10A", kilos: 50 },
+      { name: "10B", kilos: 35 },
+      { name: "11A", kilos: 28 },
+      { name: "9A", kilos: 21 },
+      { name: "11B", kilos: 16 }
+    ];
+
+    function readStorage(key, fallback) {
+      try {
+        const value = localStorage.getItem(key);
+        return value ? JSON.parse(value) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function Icon({ name, size = 21 }) {
+      const common = {
+        width: size, height: size, viewBox: "0 0 24 24",
+        fill: "none", stroke: "currentColor",
+        strokeWidth: 1.8, strokeLinecap: "round",
+        strokeLinejoin: "round", className: "shrink-0"
+      };
+
+      const shapes = {
+        home: <><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-7h6v7"/></>,
+        leaf: <><path d="M20 4c-8 0-14 4-14 11a5 5 0 0 0 5 5c7 0 9-8 9-16Z"/><path d="M4 21c3-5 7-8 12-11"/></>,
+        qr: <><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v2M14 20h3M20 18v3"/></>,
+        bus: <><rect x="4" y="3" width="16" height="17" rx="3"/><path d="M4 12h16M8 7h8M7 16h.01M17 16h.01M7 20v2M17 20v2"/></>,
+        trophy: <><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v3a4 4 0 0 0 4 4M17 6h3v3a4 4 0 0 1-4 4"/></>,
+        chart: <><path d="M3 3v18h18"/><rect x="7" y="12" width="3" height="6" rx="1"/><rect x="13" y="7" width="3" height="11" rx="1"/><rect x="19" y="4" width="2" height="14" rx="1"/></>,
+        user: <><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></>,
+        arrow: <><path d="M5 12h14M13 6l6 6-6 6"/></>,
+        check: <path d="m5 12 4 4L19 6"/>,
+        close: <><path d="m18 6-12 12M6 6l12 12"/></>,
+        zap: <path d="m13 2-3 9h7L8 22l3-9H4l9-11Z"/>,
+        clock: <><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></>,
+        pin: <><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></>,
+        logout: <><path d="M10 17l5-5-5-5M15 12H3"/><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7"/></>,
+        star: <path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9L12 3Z"/>,
+        recycle: <><path d="m7 7 3-4 3 4M10 3h4a3 3 0 0 1 2.6 1.5L19 9"/><path d="m18 7 1 3-3 1M17 17l-3 4-3-4M14 21h-4a3 3 0 0 1-2.6-1.5L5 15"/><path d="m6 17-1-3 3-1M4 9l-3 5 3 1"/></>
+      };
+
+      return <svg {...common}>{shapes[name] || shapes.leaf}</svg>;
+    }
+
+    function Logo({ light = false, large = false }) {
+      return (
+        <div className="flex items-center gap-3">
+          <div className={`flex items-center justify-center rounded-2xl ${large ? "w-14 h-14" : "w-10 h-10"} bg-emerald-400 text-slate-950`}>
+            <Icon name="recycle" size={large ? 30 : 23} />
+          </div>
+          <div>
+            <div className={`brand font-bold tracking-tight ${large ? "text-3xl" : "text-xl"} ${light ? "text-white" : "text-slate-900"}`}>
+              ECO<span className="text-emerald-400">-RUTA</span>
+            </div>
+            {large && <p className="text-sm text-slate-400 mt-1">Recicla. Suma. Muévete.</p>}
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [user, setUser] = useState(() =>
+        readStorage("ecoruta_user", null)
+      );
+      const [data, setData] = useState(() =>
+        readStorage("ecoruta_data", INITIAL_DATA)
+      );
+      const [courses, setCourses] = useState(() =>
+        readStorage("ecoruta_courses", INITIAL_COURSES)
+      );
+      const [active, setActive] = useState("inicio");
+      const [modal, setModal] = useState("");
+      const [loginName, setLoginName] = useState("");
+      const [loginCourse, setLoginCourse] = useState("10A");
+      const [notice, setNotice] = useState("");
+      const [busy, setBusy] = useState(false);
+      const [scanDone, setScanDone] = useState(false);
+      const [reservation, setReservation] = useState(null);
+
+      useEffect(() => {
+        localStorage.setItem("ecoruta_data", JSON.stringify(data));
+      }, [data]);
+
+      useEffect(() => {
+        localStorage.setItem("ecoruta_courses", JSON.stringify(courses));
+      }, [courses]);
+
+      useEffect(() => {
+        if (user) localStorage.setItem("ecoruta_user", JSON.stringify(user));
+      }, [user]);
+
+      useEffect(() => {
+        if (!notice) return;
+        const timer = setTimeout(() => setNotice(""), 3500);
+        return () => clearTimeout(timer);
+      }, [notice]);
+
+      function login(e) {
+        e.preventDefault();
+        const name = loginName.trim();
+        if (!name) return;
+
+        const nextUser = { name, course: loginCourse };
+        setUser(nextUser);
+
+        const saved = readStorage("ecoruta_data", INITIAL_DATA);
+        setData({ ...saved, name, course: loginCourse });
+        setActive("inicio");
+      }
+
+      function logout() {
+        localStorage.removeItem("ecoruta_user");
+        setUser(null);
+        setModal("");
+        setActive("inicio");
+      }
+
+      function openScanner() {
+        setScanDone(false);
+        setModal("scanner");
+      }
+
+      function simulateScan() {
+        if (busy) return;
+        setBusy(true);
+
+        setTimeout(() => {
+          const now = new Date();
+          const month = now.toLocaleString("es-CO", { month: "short" });
+          const nextHistory = [
+            {
+              id: Date.now(),
+              kilos: 1,
+              points: 100,
+              date: now.toLocaleDateString("es-CO"),
+              item: "Reciclaje registrado"
+            },
+            ...(data.history || [])
+          ];
+
+          const existing = data.monthly || INITIAL_DATA.monthly;
+          const found = existing.findIndex(
+            item => item.month.toLowerCase().replace(".", "") ===
+              month.toLowerCase().replace(".", "")
+          );
+
+          let monthly = [...existing];
+          if (found >= 0) {
+            monthly[found] = {
+              ...monthly[found],
+              kilos: monthly[found].kilos + 1
+            };
+          } else {
+            monthly = [...monthly.slice(-5), { month, kilos: 1 }];
+          }
+
+          setData(prev => ({
+            ...prev,
+            points: prev.points + 100,
+            kilos: Math.round((prev.kilos + 1) * 10) / 10,
+            scans: (prev.scans || 0) + 1,
+            monthly,
+            history: nextHistory
+          }));
+
+          setCourses(prev => prev.map(c =>
+            c.name === (user?.course || data.course)
+              ? { ...c, kilos: c.kilos + 1 }
+              : c
+          ));
+
+          setBusy(false);
+          setScanDone(true);
+          setNotice("¡Excelente! Ganaste 100 eco-puntos.");
+        }, 1200);
+      }
+
+      function reserveTransport() {
+        if (data.points < 500) {
+          setNotice(`Te faltan ${500 - data.points} eco-puntos para reservar.`);
+          return;
+        }
+
+        const item = {
+          id: Date.now(),
+          title: "Buseta eléctrica",
+          date: new Date().toLocaleDateString("es-CO"),
+          status: "Reserva de demostración"
+        };
+
+        setData(prev => ({
+          ...prev,
+          points: prev.points - 500,
+          reservations: [...(prev.reservations || []), item]
+        }));
+
+        setReservation(item);
+        setModal("reserved");
+      }
+
+      function navigate(page) {
+        setActive(page);
+        if (page === "escanear") openScanner();
+        if (page === "transporte") setTimeout(() => {
+          document.getElementById("transport-section")?.scrollIntoView({
+            behavior: "smooth", block: "start"
+          });
+        }, 50);
+        if (page === "ranking") setTimeout(() => {
+          document.getElementById("ranking-section")?.scrollIntoView({
+            behavior: "smooth", block: "start"
+          });
+        }, 50);
+      }
+
+      const maxKilos = Math.max(
+        1,
+        ...(data.monthly || INITIAL_DATA.monthly).map(m => m.kilos)
+      );
+
+      const sortedCourses = [...courses].sort((a, b) => b.kilos - a.kilos);
+      const maxCourse = Math.max(1, ...sortedCourses.map(c => c.kilos));
+      const myPosition = sortedCourses.findIndex(c => c.name === data.course) + 1;
+
+      if (!user) {
+        return (
+          <div className="login-bg login-grid min-h-screen flex items-center justify-center p-5">
+            <div className="w-full max-w-5xl grid md:grid-cols-2 gap-10 items-center py-8">
+              <div className="hidden md:block text-white">
+                <Logo light large />
+                <div className="mt-14">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-300/10 px-4 py-2 text-emerald-300 text-xs font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+                    INNOVACIÓN SOSTENIBLE
+                  </div>
+                  <h1 className="text-5xl lg:text-6xl font-bold leading-tight mt-7">
+                    Cada botella cuenta.<br />
+                    <span className="text-emerald-400">Cada viaje suma.</span>
+                  </h1>
+                  <p className="mt-6 text-slate-300 text-lg leading-8 max-w-md">
+                    Convierte tus residuos reciclables en oportunidades para
+                    moverte hacia un futuro más limpio.
+                  </p>
+                </div>
+                <div className="mt-12 grid grid-cols-3 gap-4 max-w-lg">
+                  {[
+                    ["♻", "Recicla"],
+                    ["✦", "Gana puntos"],
+                    ["↗", "Muévete"]
+                  ].map(x => (
+                    <div key={x[1]} className="rounded-2xl bg-white/5 border border-white/10 p-4">
+                      <div className="text-emerald-400 text-2xl">{x[0]}</div>
+                      <div className="text-sm mt-2 text-slate-200">{x[1]}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white rounded-3xl p-7 sm:p-10 shadow-2xl max-w-md w-full mx-auto">
+                <div className="md:hidden mb-8">
+                  <Logo large />
+                </div>
+                <div className="text-xs font-bold tracking-[.18em] text-blue-600 uppercase">
+                  Bienvenido a tu ruta sostenible
+                </div>
+                <h2 className="text-3xl font-bold mt-3">Inicia tu viaje</h2>
+                <p className="text-slate-500 mt-2 text-sm leading-6">
+                  Ingresa tus datos para acceder a tu panel de estudiante.
+                </p>
+
+                <form onSubmit={login} className="mt-8 space-y-5">
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Nombre del estudiante</label>
+                    <input
+                      required
+                      value={loginName}
+                      onChange={e => setLoginName(e.target.value)}
+                      placeholder="Ej. Valentina Pérez"
+                      maxLength="60"
+                      className="w-full rounded-xl border border-slate-200 px-4 py-3.5 outline-none focus:ring-2 focus:ring-emerald-300 focus:border-emerald-400"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Selecciona tu curso</label>
+                    <select
+                      value={loginCourse}
+                      onChange={e => setLoginCourse(e.target.value)}
+                      className="w-full rounded-xl border border-slate-200 px-4 py-3.5 bg-white outline-none focus:ring-2 focus:ring-emerald-300"
+                    >
+                      {["9A", "9B", "10A", "10B", "11A", "11B"].map(c =>
+                        <option key={c}>{c}</option>
+                      )}
+                    </select>
+                  </div>
+
+                  <button className="primary-btn w-full rounded-xl py-4 font-bold flex items-center justify-center gap-2">
+                    Entrar a ECO-RUTA <Icon name="arrow" size={19} />
+                  </button>
+                </form>
+
+                <div className="mt-7 rounded-xl bg-blue-50 border border-blue-100 p-4 text-xs text-blue-900 leading-5">
+                  <strong>Modo demostración.</strong> No necesitas una cuenta
+                  real. Tus datos se guardan localmente en este navegador.
+                </div>
+
+                <p className="text-center text-xs text-slate-400 mt-7">
+                  Proyecto ODS 9 · Infraestructura resiliente e innovación
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="app-shell min-h-screen">
+          <div className="flex min-h-screen">
+            {/* Sidebar escritorio */}
+            <aside className="sidebar hidden md:flex flex-col w-64 shrink-0 p-5">
+              <Logo light />
+              <div className="mt-3 text-[10px] text-slate-500 tracking-widest uppercase">
+                Student eco-dashboard
+              </div>
+
+              <div className="mt-10 text-[10px] uppercase tracking-[.18em] text-slate-500 font-bold px-3 mb-3">
+                Menú principal
+              </div>
+
+              <nav className="space-y-2">
+                {[
+                  ["inicio", "home", "Mi dashboard"],
+                  ["escanear", "qr", "Escanear reciclaje"],
+                  ["transporte", "bus", "Canjear transporte"],
+                  ["ranking", "trophy", "Ranking de cursos"]
+                ].map(([id, icon, label]) => (
+                  <button
+                    key={id}
+                    onClick={() => navigate(id)}
+                    className={`nav-item ${active === id ? "active" : ""}`}
+                  >
+                    <Icon name={icon} size={20} /> {label}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="mt-auto">
+                <div className="rounded-2xl p-4 border border-white/10 bg-white/5 mb-5">
+                  <div className="flex items-center gap-2 text-emerald-300 text-xs font-semibold">
+                    <Icon name="zap" size={16} /> RETO ECO-RUTA
+                  </div>
+                  <p className="text-xs text-slate-300 leading-5 mt-3">
+                    Recicla 5 kg para acercarte a nuevas oportunidades de transporte.
+                  </p>
+                  <div className="h-1.5 rounded-full bg-white/10 mt-3 overflow-hidden">
+                    <div className="h-full bg-emerald-400 rounded-full"
+                      style={{ width: `${Math.min(100, data.kilos / 5 * 100)}%` }} />
+                  </div>
+                  <div className="text-xs text-slate-400 mt-2">
+                    {data.kilos.toFixed(1)} / 5 kg
+                  </div>
+                </div>
+
+                <button onClick={logout} className="nav-item text-sm">
+                  <Icon name="logout" size={18} /> Cerrar sesión
+                </button>
+              </div>
+            </aside>
+
+            {/* Contenido principal */}
+            <main className="main-content flex-1 min-w-0 px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
+              <header className="flex items-center justify-between gap-4 mb-8">
+                <div>
+                  <div className="text-xs text-slate-400 font-semibold tracking-wider uppercase">
+                    Jueves · Tu espacio sostenible
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-bold mt-1">
+                    Mi dashboard <span className="text-2xl">👋</span>
+                  </h1>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="hidden sm:block text-right">
+                    <div className="text-sm font-bold">{data.name}</div>
+                    <div className="text-xs text-slate-500">Estudiante · {data.course}</div>
+                  </div>
+                  <div className="w-11 h-11 rounded-2xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+                    {data.name.slice(0, 1).toUpperCase()}
+                  </div>
+                </div>
+              </header>
+
+              {/* Hero */}
+              <section className="dark-hero rounded-3xl p-6 sm:p-8 lg:p-10 text-white relative overflow-hidden mb-7">
+                <div className="absolute -right-10 -top-16 w-64 h-64 border border-white/10 rounded-full"></div>
+                <div className="absolute right-5 -bottom-28 w-72 h-72 border border-emerald-300/15 rounded-full"></div>
+                <div className="relative z-10 max-w-2xl">
+                  <div className="inline-flex items-center gap-2 text-xs font-semibold text-emerald-300 bg-emerald-300/10 border border-emerald-300/20 rounded-full px-3 py-2">
+                    <Icon name="leaf" size={15} /> TU IMPACTO EMPIEZA AQUÍ
+                  </div>
+                  <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight mt-5">
+                    Hola, {data.name.split(" ")[0]}.<br />
+                    <span className="text-emerald-400">Muévete por el cambio.</span>
+                  </h2>
+                  <p className="text-slate-300 mt-4 leading-7 max-w-lg">
+                    Recicla materiales, gana eco-puntos y descubre cómo la
+                    innovación puede transformar la movilidad de tu comunidad.
+                  </p>
+                  <button
+                    onClick={openScanner}
+                    className="primary-btn rounded-xl px-5 sm:px-7 py-4 font-bold mt-6 flex items-center gap-3"
+                  >
+                    <Icon name="qr" size={22} />
+                    ESCANEAR QR DE RECICLAJE
+                    <Icon name="arrow" size={18} />
+                  </button>
+                  <p className="text-[11px] text-slate-400 mt-3">
+                    Demo: cada escaneo simulado registra 1 kg y suma 100 puntos.
+                  </p>
+                </div>
+                <div className="hidden lg:flex absolute right-12 top-1/2 -translate-y-1/2 items-center justify-center w-48 h-48 rounded-full border border-emerald-300/20 bg-white/5">
+                  <div className="w-32 h-32 rounded-full border border-emerald-300/30 flex items-center justify-center">
+                    <Icon name="recycle" size={76} />
+                  </div>
+                </div>
+              </section>
+
+              {/* Estadísticas */}
+              <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-7">
+                <div className="card stat-card p-5 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-slate-500 font-medium">Eco-puntos actuales</div>
+                    <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center">
+                      <Icon name="zap" size={21} />
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold mt-4">{data.points.toLocaleString("es-CO")}</div>
+                  <div className="text-xs text-emerald-600 mt-2 flex items-center gap-1">
+                    <Icon name="star" size={13} /> 100 puntos por cada kg simulado
+                  </div>
+                </div>
+
+                <div className="card stat-card p-5 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-slate-500 font-medium">Reciclaje acumulado</div>
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                      <Icon name="leaf" size={21} />
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold mt-4">{data.kilos.toFixed(1)} <span className="text-base text-slate-400 font-medium">kg</span></div>
+                  <div className="text-xs text-slate-400 mt-2">Material reciclado registrado</div>
+                </div>
+
+                <div className="card stat-card p-5 sm:p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="text-sm text-slate-500 font-medium">Posición de tu curso</div>
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                      <Icon name="trophy" size={21} />
+                    </div>
+                  </div>
+                  <div className="text-3xl font-bold mt-4">
+                    {myPosition || "—"}<span className="text-base text-slate-400 font-medium"> / {courses.length}</span>
+                  </div>
+                  <div className="text-xs text-blue-600 mt-2">Curso {data.course} · Ranking ECO-RUTA</div>
+                </div>
+              </section>
+
+              {/* Gráfico y actividad */}
+              <section className="grid grid-cols-1 xl:grid-cols-5 gap-5 mb-7">
+                <div className="card p-5 sm:p-6 xl:col-span-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <h3 className="text-lg font-bold">Mi reciclaje mensual</h3>
+                      <p className="text-xs text-slate-400 mt-1">Kilos registrados por mes</p>
+                    </div>
+                    <div className="rounded-lg bg-emerald-50 text-emerald-700 text-xs px-3 py-2 font-semibold">
+                      <Icon name="chart" size={14} /> kg
+                    </div>
+                  </div>
+
+                  <div className="h-52 flex gap-3 sm:gap-5 mt-7 px-1">
+                    {(data.monthly || INITIAL_DATA.monthly).map((m, i) => {
+                      const height = Math.max(5, m.kilos / maxKilos * 145);
+                      const isLast = i === data.monthly.length - 1;
+                      return (
+                        <div key={m.month + i} className="flex-1 flex flex-col items-center justify-end min-w-0">
+                          <div className={`text-[11px] font-bold mb-2 ${isLast ? "text-emerald-600" : "text-slate-400"}`}>
+                            {m.kilos.toFixed(1)}
+                          </div>
+                          <div className="w-full flex items-end justify-center" style={{ height: 150 }}>
+                            <div
+                              className="chart-bar w-full max-w-11"
+                              style={{
+                                height: `${height}px`,
+                                background: isLast
+                                  ? "linear-gradient(180deg,#3ce4a1,#17b77a)"
+                                  : "linear-gradient(180deg,#8fc1ff,#4389ff)"
+                              }}
+                            />
+                          </div>
+                          <div className="text-[10px] sm:text-xs text-slate-400 mt-3">
+                            {m.month}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="border-t border-slate-100 pt-4 mt-5 flex items-center justify-between">
+                    <span className="text-xs text-slate-500">Total acumulado</span>
+                    <span className="text-sm font-bold">{data.kilos.toFixed(1)} kg</span>
+                  </div>
+                </div>
+
+                <div className="card p-5 sm:p-6 xl:col-span-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-bold">Actividad reciente</h3>
+                      <p className="text-xs text-slate-400 mt-1">Tu progreso en ECO-RUTA</p>
+                    </div>
+                    <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                      <Icon name="clock" size={19} />
+                    </div>
+                  </div>
+
+                  <div className="mt-5 space-y-4">
+                    {(data.history || []).slice(0, 4).map(item => (
+                      <div key={item.id} className="flex gap-3 items-start">
+                        <div className="w-9 h-9 shrink-0 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                          <Icon name="recycle" size={18} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-sm font-semibold">{item.item}</div>
+                          <div className="text-xs text-slate-400 mt-1">{item.date} · {item.kilos} kg</div>
+                        </div>
+                        <div className="text-xs font-bold text-emerald-600 whitespace-nowrap">+{item.points} pts</div>
+                      </div>
+                    ))}
+
+                    {(data.history || []).length === 0 && (
+                      <div className="py-8 text-center">
+                        <div className="w-14 h-14 rounded-2xl bg-slate-50 mx-auto flex items-center justify-center text-slate-400">
+                          <Icon name="leaf" size={27} />
+                        </div>
+                        <p className="text-sm font-semibold mt-4">Tu historia comienza aquí</p>
+                        <p className="text-xs text-slate-400 mt-2 leading-5">
+                          Registra tu primer reciclaje para ver tu actividad.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </section>
+
+              {/* Transporte */}
+              <section id="transport-section" className="mb-7 scroll-mt-5">
+                <div className="flex items-end justify-between gap-3 mb-4">
+                  <div>
+                    <div className="text-xs text-blue-600 font-bold tracking-wider uppercase">Recompensas sostenibles</div>
+                    <h2 className="text-2xl font-bold mt-1">Canjear transporte</h2>
+                    <p className="text-sm text-slate-500 mt-1">Convierte tus eco-puntos en movilidad limpia.</p>
+                  </div>
+                </div>
+
+                <div className="card overflow-hidden grid md:grid-cols-2">
+                  <div className="dark-hero min-h-56 p-6 sm:p-8 flex flex-col justify-between text-white relative overflow-hidden">
+                    <div className="absolute -right-6 -bottom-8 opacity-10">
+                      <Icon name="bus" size={190} />
+                    </div>
+                    <div className="relative z-10 flex justify-between items-start">
+                      <span className="bg-emerald-300/15 border border-emerald-300/25 text-emerald-300 text-xs font-semibold px-3 py-2 rounded-full">
+                        MOVILIDAD ELÉCTRICA
+                      </span>
+                      <Icon name="zap" size={25} />
+                    </div>
+                    <div className="relative z-10 mt-8">
+                      <div className="text-4xl">🚌</div>
+                      <h3 className="text-2xl font-bold mt-3">Buseta eléctrica</h3>
+                      <p className="text-sm text-slate-300 mt-2">
+                        Una alternativa de transporte más limpia.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="p-6 sm:p-8 flex flex-col justify-center">
+                    <div className="text-xs text-slate-400 uppercase tracking-wider font-bold">Costo de la recompensa</div>
+                    <div className="flex items-baseline gap-2 mt-2">
+                      <span className="text-4xl font-bold">500</span>
+                      <span className="text-sm text-slate-500">eco-puntos</span>
+                    </div>
+
+                    <div className="mt-5">
+                      <div className="flex justify-between text-xs mb-2">
+                        <span className="text-slate-500">Tu progreso</span>
+                        <span className="font-bold">{Math.min(100, data.points / 500 * 100).toFixed(0)}%</span>
+                      </div>
+                      <div className="h-2 rounded-full bg-slate-100 overflow-hidden">
+                        <div className="h-full rounded-full bg-blue-500 transition-all"
+                          style={{ width: `${Math.min(100, data.points / 500 * 100)}%` }} />
+                      </div>
+                      <p className="text-xs text-slate-400 mt-2">
+                        {data.points >= 500
+                          ? "¡Ya puedes solicitar esta recompensa!"
+                          : `Te faltan ${500 - data.points} puntos para alcanzar la meta.`}
+                      </p>
+                    </div>
+
+                    <button
+                      onClick={reserveTransport}
+                      className={`mt-5 rounded-xl py-3.5 font-bold flex items-center justify-center gap-2 ${data.points >= 500 ? "blue-btn" : "bg-slate-100 text-slate-500"}`}
+                    >
+                      <Icon name="bus" size={19} />
+                      {data.points >= 500 ? "Reservar transporte" : "Reservar · 500 pts"}
+                    </button>
+                    <p className="text-[10px] text-slate-400 mt-3 leading-4">
+                      Reserva ficticia para la demostración. No genera un pasaje real.
+                    </p>
+                  </div>
+                </div>
+
+                {(data.reservations || []).length > 0 && (
+                  <div className="card p-5 mt-4">
+                    <h3 className="font-bold">Mis reservas de demostración</h3>
+                    {data.reservations.map(r => (
+                      <div key={r.id} className="flex gap-3 items-center mt-4">
+                        <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                          <Icon name="bus" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="font-semibold text-sm">{r.title}</div>
+                          <div className="text-xs text-slate-400 mt-1">{r.date}</div>
+                        </div>
+                        <span className="text-xs text-emerald-700 bg-emerald-50 rounded-full px-3 py-2">
+                          Registrada
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </section>
+
+              {/* Ranking */}
+              <section id="ranking-section" className="card p-5 sm:p-7 mb-7 scroll-mt-5">
+                <div className="flex items-start justify-between gap-3 mb-7">
+                  <div>
+                    <div className="text-xs text-emerald-600 font-bold tracking-wider uppercase">Competencia positiva</div>
+                    <h2 className="text-2xl font-bold mt-1">Ranking de cursos</h2>
+                    <p className="text-sm text-slate-500 mt-2">Juntos podemos reciclar más.</p>
+                  </div>
+                  <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center">
+                    <Icon name="trophy" size={23} />
+                  </div>
+                </div>
+
+                <div className="space-y-5">
+                  {sortedCourses.map((course, i) => {
+                    const mine = course.name === data.course;
+                    const medal = ["🥇", "🥈", "🥉"][i];
+
+                    return (
+                      <div key={course.name} className="course-row">
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center font-bold ${i === 0 ? "bg-amber-50" : "bg-slate-50"}`}>
+                          {medal || <span className="text-sm text-slate-500">{i + 1}</span>}
+                        </div>
+
+                        <div className="min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="font-bold text-sm">Curso {course.name}</span>
+                            {mine && <span className="text-[9px] rounded-full px-2 py-1 bg-blue-50 text-blue-600 font-bold">TU CURSO</span>}
+                          </div>
+                          <div className="rank-bar">
+                            <div
+                              style={{
+                                width: `${course.kilos / maxCourse * 100}%`,
+                                background: i === 0
+                                  ? "linear-gradient(90deg,#22c987,#6be7b5)"
+                                  : "linear-gradient(90deg,#3787ff,#78b4ff)"
+                              }}
+                            />
+                          </div>
+                        </div>
+
+                        <div className="text-right">
+                          <div className="font-bold text-sm">{course.kilos} kg</div>
+                          <div className="text-[10px] text-slate-400">reciclados</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="mt-7 p-4 rounded-xl bg-emerald-50 text-emerald-900 text-sm flex items-start gap-3">
+                  <Icon name="leaf" size={20} />
+                  <p className="leading-6">
+                    <strong>¡Cada kilo importa!</strong> Los registros de esta
+                    demostración actualizan el total del curso seleccionado.
+                  </p>
+                </div>
+              </section>
+
+              {/* ODS */}
+              <section className="rounded-2xl border border-blue-100 bg-blue-50/70 p-5 sm:p-6 mb-4">
+                <div className="flex gap-4 items-start">
+                  <div className="bg-blue-600 text-white rounded-xl p-3 shrink-0">
+                    <Icon name="chart" size={25} />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-blue-700">
+                      Objetivo de Desarrollo Sostenible
+                    </div>
+                    <h3 className="text-lg font-bold mt-1">Proyecto ODS 9 - Infraestructura resiliente e innovación</h3>
+                    <p className="text-sm text-slate-600 leading-6 mt-2">
+                      ECO-RUTA propone conectar reciclaje, tecnología IoT y
+                      movilidad sostenible mediante un sistema de puntos.
+                      Busca fomentar la innovación y promover infraestructuras
+                      y soluciones de transporte más sostenibles.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <footer className="text-center text-xs text-slate-400 py-4">
+                ECO-RUTA © 2026 · Prototipo educativo · Datos de demostración almacenados en este navegador.
+              </footer>
+            </main>
+          </div>
+
+          {/* Navegación móvil */}
+          <nav className="mobile-nav md:hidden">
+            {[
+              ["inicio", "⌂", "Inicio"],
+              ["escanear", "▦", "Escanear"],
+              ["transporte", "🚌", "Transporte"],
+              ["ranking", "🏆", "Ranking"]
+            ].map(([id, icon, label]) => (
+              <button
+                key={id}
+                onClick={() => navigate(id)}
+                className={active === id ? "active" : ""}
+              >
+                <span>{icon}</span>
+                <span>{label}</span>
+              </button>
+            ))}
+          </nav>
+
+          {/* Notificaciones */}
+          {notice && (
+            <div role="status" className="fixed z-50 top-4 left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-md rounded-2xl bg-slate-900 text-white px-5 py-4 shadow-2xl flex items-center gap-3 pop">
+              <span className="w-9 h-9 rounded-xl bg-emerald-400/15 text-emerald-300 flex items-center justify-center">
+                <Icon name="check" />
+              </span>
+              <p className="text-sm font-semibold">{notice}</p>
+              <button onClick={() => setNotice("")} className="ml-auto text-slate-400">
+                <Icon name="close" size={18} />
+              </button>
+            </div>
+          )}
+
+          {/* Modal QR */}
+          {modal === "scanner" && (
+            <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4"
+              onMouseDown={e => { if (e.target === e.currentTarget && !busy) setModal(""); }}>
+              <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl pop">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <div className="text-xs text-emerald-600 uppercase tracking-wider font-bold">Reciclaje inteligente</div>
+                    <h2 className="text-2xl font-bold mt-2">Escáner ECO-RUTA</h2>
+                    <p className="text-sm text-slate-500 mt-2">
+                      Simula el registro de un punto de reciclaje.
+                    </p>
+                  </div>
+                  <button disabled={busy} onClick={() => setModal("")} className="p-2 rounded-xl bg-slate-100">
+                    <Icon name="close" />
+                  </button>
+                </div>
+
+                <div className="mt-7">
+                  {!scanDone ? (
+                    <>
+                      <div className="qr-frame">
+                        <div className="text-slate-800">
+                          <Icon name="qr" size={90} />
+                        </div>
+                        <div className="scan-line"></div>
+                      </div>
+                      <div className="text-center mt-5">
+                        <div className="font-bold">Punto de reciclaje demo</div>
+                        <div className="text-xs text-slate-400 mt-1">Código QR de demostración</div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 mt-6">
+                        <div className="rounded-xl bg-emerald-50 p-4 text-center">
+                          <div className="text-xl font-bold text-emerald-700">+1 kg</div>
+                          <div className="text-xs text-slate-500 mt-1">Reciclaje</div>
+                        </div>
+                        <div className="rounded-xl bg-blue-50 p-4 text-center">
+                          <div className="text-xl font-bold text-blue-700">+100</div>
+                          <div className="text-xs text-slate-500 mt-1">Eco-puntos</div>
+                        </div>
+                      </div>
+                      <button
+                        disabled={busy}
+                        onClick={simulateScan}
+                        className="primary-btn rounded-xl w-full py-4 font-bold mt-6 flex items-center justify-center gap-2"
+                      >
+                        {busy
+                          ? <><span className="animate-spin">◌</span> Registrando reciclaje...</>
+                          : <><Icon name="qr" /> Simular escaneo QR</>}
+                      </button>
+                      <p className="text-center text-[10px] text-slate-400 mt-3">
+                        No se utiliza la cámara ni se lee un QR real.
+                      </p>
+                    </>
+                  ) : (
+                    <div className="text-center py-5 pop">
+                      <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
+                        <Icon name="check" size={45} />
+                      </div>
+                      <h3 className="text-2xl font-bold mt-5">¡Reciclaje registrado!</h3>
+                      <p className="text-sm text-slate-500 mt-2">Tu aporte suma al cambio.</p>
+                      <div className="rounded-2xl bg-emerald-50 p-5 mt-6">
+                        <div className="text-emerald-700 text-4xl font-bold">+100 pts</div>
+                        <div className="text-sm text-emerald-800 mt-2">+1 kg reciclado</div>
+                      </div>
+                      <button onClick={() => { setModal(""); setActive("inicio"); }}
+                        className="blue-btn rounded-xl w-full py-4 font-bold mt-6">
+                        Volver a mi dashboard
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Modal reserva */}
+          {modal === "reserved" && reservation && (
+            <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4">
+              <div className="bg-white rounded-3xl p-7 max-w-sm w-full text-center shadow-2xl pop">
+                <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center">
+                  <Icon name="check" size={40} />
+                </div>
+                <h2 className="text-2xl font-bold mt-5">¡Reserva simulada!</h2>
+                <p className="text-sm text-slate-500 mt-3 leading-6">
+                  Tu solicitud de demostración para la buseta eléctrica se ha registrado.
+                </p>
+                <div className="rounded-xl bg-slate-50 p-4 text-left mt-5">
+                  <div className="text-sm font-bold">Buseta eléctrica</div>
+                  <div className="text-xs text-slate-500 mt-2">Fecha: {reservation.date}</div>
+                  <div className="text-xs text-slate-500 mt-1">Costo: 500 eco-puntos</div>
+                  <div className="text-xs text-emerald-700 mt-2">Saldo: {data.points} puntos</div>
+                </div>
+                <button onClick={() => { setModal(""); setActive("inicio"); }}
+                  className="blue-btn w-full rounded-xl py-4 font-bold mt-5">
+                  Continuar
+                </button>
+                <p className="text-[10px] text-slate-400 mt-3">No es un pasaje de transporte real.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
